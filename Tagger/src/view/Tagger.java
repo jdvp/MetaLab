@@ -19,6 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 
+import model.TagAdder;
 import model.Tags;
 
 public class Tagger extends JFrame {
@@ -29,7 +30,7 @@ public class Tagger extends JFrame {
 	private static final long serialVersionUID = 2321192101874405576L;
 	
 	private Tags myTags = new Tags();
-	
+	private String songAddress = "";
 	private JPanel contentPane;
 	private JTextField tagField;
 
@@ -104,7 +105,8 @@ public class Tagger extends JFrame {
 		JButton btnSave = new JButton("      Save      ");
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//TagAdder a = new TagAdder();
+				TagAdder a = new TagAdder(songAddress);
+				a.commitComment(myTags.outputTag());
 			}
 		});
 		
@@ -189,7 +191,35 @@ public class Tagger extends JFrame {
 		panel_1.add(lblNewLabel);
 		
 		JPanel panel_2 = new JPanel();
-		contentPane.add(panel_2, BorderLayout.SOUTH);
+		contentPane.add(panel_2, BorderLayout.CENTER);
+		panel_2.setLayout(new BorderLayout(0, 0));
+		
+		JPanel panel_4 = new JPanel();
+		panel_2.add(panel_4, BorderLayout.NORTH);
+		
+		JTextField textField = new JTextField();
+		panel_4.add(textField);
+		textField.setColumns(10);
+		
+		JButton btnChoose = new JButton("Choose");
+		btnChoose.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				songAddress = textField.getText();
+				myTags = new Tags();
+				tag1.setSelected(false);
+				tag2.setSelected(false);
+				tag3.setSelected(false);
+				tag4.setSelected(false);
+				tag5.setSelected(false);
+				tag6.setSelected(false);
+				tag7.setSelected(false);
+				tag8.setSelected(false);
+			}
+		});
+		panel_4.add(btnChoose);
+		
+		JPanel panel_3 = new JPanel();
+		panel_2.add(panel_3);
 	}
 	
 	public void addTag(String tag)
