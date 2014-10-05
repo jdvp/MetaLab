@@ -21,6 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 
+import model.ScrobbleParser;
 import model.TagAdder;
 import model.Tags;
 
@@ -31,6 +32,7 @@ public class Tagger extends JFrame {
 	 */
 	private static final long serialVersionUID = 2321192101874405576L;
 	
+	private ScrobbleParser sp= new ScrobbleParser();
 	private Tags myTags = new Tags();
 	private String songAddress = "";
 	private JPanel contentPane;
@@ -143,11 +145,23 @@ public class Tagger extends JFrame {
 		
 		JPanel panel_4 = new JPanel();
 		panel_2.add(panel_4, BorderLayout.NORTH);
+		panel_4.setLayout(new BoxLayout(panel_4, BoxLayout.X_AXIS));
 		
-		JTextField txtCusersjdPorterfielddocumentssummerkerr = new JTextField();
-		txtCusersjdPorterfielddocumentssummerkerr.setText("C:/Users/JD Porterfield/Documents/Summer 2014/Kerr PSP/PSP/Music/Rap/001 Ridin' Dirty.mp3");
-		panel_4.add(txtCusersjdPorterfielddocumentssummerkerr);
-		txtCusersjdPorterfielddocumentssummerkerr.setColumns(10);
+		
+		JTextField txtFieldChoose = new JTextField();
+		txtFieldChoose.setText(sp.getLatestRequest());
+		
+		JButton btnCurrentSong = new JButton("Current Song");
+		btnCurrentSong.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				txtFieldChoose.setText(sp.getLatestRequest());
+			}
+		});
+		panel_4.add(btnCurrentSong);
+		
+		
+		panel_4.add(txtFieldChoose);
+		txtFieldChoose.setColumns(10);
 		
 
 		JLabel albumArt = new JLabel("");
@@ -157,7 +171,7 @@ public class Tagger extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 
 				
-				songAddress = txtCusersjdPorterfielddocumentssummerkerr.getText();
+				songAddress = txtFieldChoose.getText();
 				myTags = new Tags();
 				myTags.checkOriginalTags(songAddress);
 				myTags.addTag(tagField.getText());
@@ -219,4 +233,5 @@ public class Tagger extends JFrame {
 	{
 		myTags.removeTag(tag);
 	}
+	
 }

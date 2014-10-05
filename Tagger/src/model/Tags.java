@@ -58,6 +58,7 @@ public class Tags {
 	{
 		//Makes sure there are no duplicate tags
 		removeTag(tag);
+		removeTag("null");
 		
 		currentTags.add(tag);
 		allTags.add(tag);
@@ -68,12 +69,17 @@ public class Tags {
 
 	public void removeTag(String tag)
 	{
+		try{
 		allTags.remove(tag);
 		currentTags.remove(tag);
 		System.out.println(tag);
 		outputTags = outputTags.replaceAll(tag,"");
 		outputTags = outputTags.replaceAll("\\s+", " ").trim();
-		System.out.println(outputTags);
+		System.out.println(outputTags);}
+		catch(Exception e)
+		{
+			
+		}
 	}
 	
 	public String outputTag()
@@ -107,14 +113,22 @@ public class Tags {
 		//Parse the comments for separate words
 		String origComm = tag.getComment();
 		outputTags = origComm;		
-		Scanner input = new Scanner(origComm);
-		while(input.hasNext())
+		try
 		{
-			String token = input.next();
-			if(token.trim().length()>0)
-				myTags.add(token);
+			Scanner input = new Scanner(origComm);
+			while(input.hasNext())
+			{
+				String token = input.next();
+				if(token.trim().length()>0)
+					myTags.add(token);
+			}
+			input.close();
 		}
-		input.close();
+		catch(Exception e)
+		{
+			//Nothing
+		}
+		
 		
 		//Get rid of duplicates
 		HashSet<String> hs = new HashSet<String>();
@@ -168,7 +182,7 @@ public class Tags {
 		try {
 			me = new Mp3File(filename);
 		} catch (Exception e) {
-			return null;
+			return Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("img/q.png"));
 		}
 		
 		
