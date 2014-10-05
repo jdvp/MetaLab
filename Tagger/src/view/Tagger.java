@@ -21,6 +21,8 @@ import javax.swing.border.EmptyBorder;
 
 import model.TagAdder;
 import model.Tags;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 public class Tagger extends JFrame {
 
@@ -32,7 +34,6 @@ public class Tagger extends JFrame {
 	private Tags myTags = new Tags();
 	private String songAddress = "";
 	private JPanel contentPane;
-	private JTextField tagField;
 
 	/**
 	 * Launch the application.
@@ -89,19 +90,6 @@ public class Tagger extends JFrame {
 			}
 		};
 		
-		
-		JCheckBox tag3 = new JCheckBox(defaultTags.get(0));
-		tag3.addItemListener(checkBoxListener);
-		
-		JCheckBox tag2 = new JCheckBox(defaultTags.get(1));
-		tag2.addItemListener(checkBoxListener);
-		
-		JCheckBox tag1 = new JCheckBox(defaultTags.get(2));
-		tag1.addItemListener(checkBoxListener);
-		
-		JCheckBox tag4 = new JCheckBox(defaultTags.get(3));
-		tag4.addItemListener(checkBoxListener);
-		
 		JButton btnSave = new JButton("      Save      ");
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -118,70 +106,62 @@ public class Tagger extends JFrame {
 			}
 		});
 		
-		JCheckBox tag5 = new JCheckBox(defaultTags.get(4));
-		tag5.addItemListener(checkBoxListener);
-		
-		JCheckBox tag6 = new JCheckBox(defaultTags.get(5));
-		tag6.addItemListener(checkBoxListener);
-		
-		JCheckBox tag7 = new JCheckBox(defaultTags.get(6));
-		tag7.addItemListener(checkBoxListener);
-		
-		JCheckBox tag8 = new JCheckBox(defaultTags.get(7));
-		tag8.addItemListener(checkBoxListener);
-		
-		tagField = new JTextField();
-		tagField.setColumns(10);
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel.createSequentialGroup()
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addComponent(tag1)
-						.addComponent(tag2)
-						.addComponent(tag3)
-						.addComponent(tag4)
-						.addComponent(tag5)
-						.addComponent(tag6)
-						.addComponent(tag7)
-						.addComponent(tag8)
+					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_panel.createSequentialGroup()
 							.addContainerGap()
-							.addComponent(btnNewTag))
+							.addComponent(btnNewTag, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 						.addGroup(gl_panel.createSequentialGroup()
 							.addContainerGap()
-							.addComponent(btnSave, GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE))
-						.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(tagField, GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)))
+							.addComponent(btnSave, GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)))
 					.addContainerGap())
+				.addComponent(scrollPane_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
 		);
 		gl_panel.setVerticalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
+			gl_panel.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel.createSequentialGroup()
-					.addComponent(tag1)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(tag2)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(tag3)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(tag4)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(tag5)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(tag6)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(tag7)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(tag8)
-					.addPreferredGap(ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
-					.addComponent(tagField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
+					.addContainerGap()
+					.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
+					.addGap(18)
 					.addComponent(btnNewTag)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnSave))
 		);
+		
+		JPanel panel_5 = new JPanel();
+		scrollPane_1.setViewportView(panel_5);
+		
+		JCheckBox tag8 = new JCheckBox(defaultTags.get(7));
+		
+		JCheckBox tag1 = new JCheckBox(defaultTags.get(2));
+		GroupLayout gl_panel_5 = new GroupLayout(panel_5);
+		gl_panel_5.setHorizontalGroup(
+			gl_panel_5.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_5.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panel_5.createParallelGroup(Alignment.LEADING)
+						.addComponent(tag8)
+						.addComponent(tag1))
+					.addGap(459))
+		);
+		gl_panel_5.setVerticalGroup(
+			gl_panel_5.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_5.createSequentialGroup()
+					.addGap(5)
+					.addComponent(tag8)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(tag1)
+					.addContainerGap(163, Short.MAX_VALUE))
+		);
+		panel_5.setLayout(gl_panel_5);
+		tag1.addItemListener(checkBoxListener);
+		tag8.addItemListener(checkBoxListener);
 		panel.setLayout(gl_panel);
 		
 		JPanel panel_1 = new JPanel();
@@ -197,14 +177,18 @@ public class Tagger extends JFrame {
 		JPanel panel_4 = new JPanel();
 		panel_2.add(panel_4, BorderLayout.NORTH);
 		
-		JTextField textField = new JTextField();
-		panel_4.add(textField);
-		textField.setColumns(10);
+		JTextField txtCusersjdPorterfielddocumentssummerkerr = new JTextField();
+		txtCusersjdPorterfielddocumentssummerkerr.setText("C:/Users/JD Porterfield/Documents/Summer 2014/Kerr PSP/PSP/Music/Rap/001 Ridin' Dirty.mp3");
+		panel_4.add(txtCusersjdPorterfielddocumentssummerkerr);
+		txtCusersjdPorterfielddocumentssummerkerr.setColumns(10);
 		
 		JButton btnChoose = new JButton("Choose");
 		btnChoose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				songAddress = textField.getText();
+
+				
+				songAddress = txtCusersjdPorterfielddocumentssummerkerr.getText();
+				myTags.checkOriginalTags(songAddress);
 				myTags = new Tags();
 				tag1.setSelected(false);
 				tag2.setSelected(false);
