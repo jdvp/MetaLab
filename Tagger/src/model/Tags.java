@@ -1,8 +1,16 @@
 package model;
 
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
+
+import javax.imageio.ImageIO;
 
 import com.mpatric.mp3agic.ID3v1;
 import com.mpatric.mp3agic.ID3v1Tag;
@@ -98,13 +106,11 @@ public class Tags {
 		
 		//Parse the comments for separate words
 		String origComm = tag.getComment();
-		System.out.println("BEFORE");
-		System.out.println(origComm);
-		System.out.println("AFTER");
+		outputTags = origComm;		
 		Scanner input = new Scanner(origComm);
 		while(input.hasNext())
 		{
-			String token =input.next();
+			String token = input.next();
 			if(token.trim().length()>0)
 				myTags.add(token);
 		}
@@ -122,8 +128,6 @@ public class Tags {
 		
 		currentTags.addAll(myTags);
 		
-		if (myTags.isEmpty())
-			return defaultTags;
 		return myTags;
 	}
 	
@@ -148,8 +152,55 @@ public class Tags {
 		}
 		
 		String title = tag.getTrack();
-		System.out.println(title);
+		if(title == "" || title == null)
+		{
+			title = filename;
+		}
+		//System.out.println(title);
 		
 		return title;
+	}
+	
+	public Image getImage(String filename)
+	{
+		//Open the mp3 metadata
+		Mp3File me = null;
+		try {
+			me = new Mp3File(filename);
+		} catch (Exception e) {
+			return null;
+		}
+		
+		
+		//Get the mp3 tag
+		ID3v2 tag;
+		if (me.hasId3v2Tag()) {
+		  tag = me.getId3v2Tag();
+		} else {
+		  // mp3 does not have an ID3v2 tag, let's create one..
+		  tag = new ID3v24Tag();
+		  me.setId3v2Tag(tag);
+		}
+		
+		
+		byte[] myBytes = tag.getAlbumImage();
+		
+		try
+		{
+		InputStream in = new ByteArrayInputStream(myBytes);
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(in);
+		} catch (IOException f) {
+			// TODO Auto-generated catch block
+			f.printStackTrace();
+		}
+		
+		return img;
+		}
+		catch(Exception e)
+		{
+			return Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("img/q.png"));
+		}
 	}
 }

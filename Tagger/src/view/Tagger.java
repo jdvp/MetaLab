@@ -2,6 +2,7 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -9,6 +10,7 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -30,7 +32,6 @@ public class Tagger extends JFrame {
 	private static final long serialVersionUID = 2321192101874405576L;
 	
 	private Tags myTags = new Tags();
-	private ArrayList<JCheckBox> checks = new ArrayList<JCheckBox>();
 	private String songAddress = "";
 	private JPanel contentPane;
 	private JTextField tagField;
@@ -148,6 +149,9 @@ public class Tagger extends JFrame {
 		panel_4.add(txtCusersjdPorterfielddocumentssummerkerr);
 		txtCusersjdPorterfielddocumentssummerkerr.setColumns(10);
 		
+
+		JLabel albumArt = new JLabel("");
+		
 		JButton btnChoose = new JButton("Choose");
 		btnChoose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -159,14 +163,16 @@ public class Tagger extends JFrame {
 				myTags.addTag(tagField.getText());
 				tagField.setText("");
 				lblNewLabel.setText(myTags.getTitle(songAddress));
-				
+				Image resizedImage = myTags.getImage(songAddress).getScaledInstance(albumArt.getWidth(), albumArt.getHeight(), 0);
+				ImageIcon icon = new ImageIcon(resizedImage);
+				albumArt.setIcon(icon);
 				updateTagPanel();
 			}
 		});
+		
+		panel_2.add(albumArt, BorderLayout.CENTER);
 		panel_4.add(btnChoose);
 		
-		JPanel panel_3 = new JPanel();
-		panel_2.add(panel_3);
 	}
 	
 	public ArrayList<JCheckBox> getCheckBoxes()
@@ -176,11 +182,16 @@ public class Tagger extends JFrame {
 		
 		for(String tag : myTags.getAllTags())
 		{
-			JCheckBox box = new JCheckBox(tag);
-			ArrayList<String> current = myTags.getCurrentTags();
-			if(current.contains(tag))
-				box.setSelected(true);
-			myTagFields.add(box);
+			if(tag.matches("[a-zA-Z]+"))
+			{
+				JCheckBox box = new JCheckBox(tag);
+				ArrayList<String> current = myTags.getCurrentTags();
+				if(current.contains(tag))
+					box.setSelected(true);
+				else
+					box.setSelected(false);
+				myTagFields.add(box);
+			}
 		}
 		
 		return myTagFields;
