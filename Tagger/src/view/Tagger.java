@@ -19,9 +19,6 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 
-import entagged.audioformats.exceptions.CannotReadException;
-import entagged.audioformats.exceptions.CannotWriteException;
-import model.TagAdder;
 import model.Tags;
 
 public class Tagger extends JFrame {
@@ -107,15 +104,7 @@ public class Tagger extends JFrame {
 		JButton btnSave = new JButton("      Save      ");
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					TagAdder a = new TagAdder();
-				} catch (CannotWriteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (CannotReadException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				//TagAdder a = new TagAdder();
 			}
 		});
 		

@@ -4,20 +4,41 @@ import java.io.File;
 
 import entagged.audioformats.AudioFile;
 import entagged.audioformats.AudioFileIO;
-import entagged.audioformats.Tag;
 import entagged.audioformats.exceptions.CannotReadException;
 import entagged.audioformats.exceptions.CannotWriteException;
 
 public class TagAdder {
 
-	public TagAdder() throws CannotWriteException, CannotReadException
+	AudioFile audioFile = null;
+	String song = "";
+	
+	public TagAdder(String song)
 	{
-		AudioFile audioFile = AudioFileIO.read(new File("C:/Users/JD Porterfield/Documents/Summer 2014/Kerr PSP/PSP/Music/Rap/001 Ridin' Dirty.mp3")); //Reads the given file.
-		int bitrate = audioFile.getBitrate(); //Retreives the bitrate of the file.
-		Tag t = audioFile.getTag();
-		String artist =  t.getFirstArtist();//Retreive the artist name.
-		audioFile.getTag().setComment("Yee yee muthafucka"); //Sets the genre to Prog. Rock, note the file on disk is still unmodified.
-		audioFile.commit();
+		this.song = song;
+		//Retrieve song
+		try 
+		{
+			audioFile = AudioFileIO.read(new File(song));
+		}
+		catch(CannotReadException e)
+		{
+			System.err.println("Error reading song " + song);
+		}
 	}
 	
+	public void commitComment(String comment)
+	{
+		//Set comment field
+		audioFile.getTag().setComment(comment); //Sets the genre to Prog. Rock, note the file on disk is still unmodified.
+		
+		//Commit the change
+		try
+		{
+			audioFile.commit();
+		}
+		catch(CannotWriteException e)
+		{
+			System.err.println("Error writing to song " + song);
+		}
+	}
 }
