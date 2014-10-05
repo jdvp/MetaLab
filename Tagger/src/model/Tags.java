@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
 
+import com.mpatric.mp3agic.ID3v1;
+import com.mpatric.mp3agic.ID3v1Tag;
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.ID3v24Tag;
 import com.mpatric.mp3agic.Mp3File;
@@ -11,6 +13,8 @@ import com.mpatric.mp3agic.Mp3File;
 public class Tags {
 	
 	private ArrayList<String> defaultTags = new ArrayList<String>();
+	private ArrayList<String> allTags = new ArrayList<String>();
+	private ArrayList<String> currentTags = new ArrayList<String>();
 	private static String outputTags = "";
 	
 	public Tags()
@@ -24,6 +28,7 @@ public class Tags {
 		defaultTags.add("Vocals");
 		defaultTags.add("Happy");
 		defaultTags.add("Sad");
+		allTags = new ArrayList<String>(defaultTags);
 	}
 	
 	public ArrayList<String> getDefaultTags()
@@ -31,12 +36,23 @@ public class Tags {
 		return defaultTags;
 	}
 	
+	public ArrayList<String> getAllTags()
+	{
+		return allTags;
+	}
+	
+	public ArrayList<String> getCurrentTags()
+	{
+		return currentTags;
+	}
+	
 	public void addTag(String tag)
 	{
 		//Makes sure there are no duplicate tags
 		removeTag(tag);
 		
-		
+		currentTags.add(tag);
+		allTags.add(tag);
 		outputTags += (" " + tag);
 		outputTags = outputTags.trim();
 		System.out.println(outputTags);
@@ -44,6 +60,8 @@ public class Tags {
 
 	public void removeTag(String tag)
 	{
+		allTags.remove(tag);
+		currentTags.remove(tag);
 		System.out.println(tag);
 		outputTags = outputTags.replaceAll(tag,"");
 		outputTags = outputTags.replaceAll("\\s+", " ").trim();
@@ -57,14 +75,14 @@ public class Tags {
 	
 	public ArrayList<String> checkOriginalTags(String filename)
 	{
-		ArrayList<String> myTags = new ArrayList<String>(defaultTags);
+		ArrayList<String> myTags = new ArrayList<String>();
 		
 		//Open the mp3 metadata
 		Mp3File me = null;
 		try {
 			me = new Mp3File(filename);
 		} catch (Exception e) {
-			e.printStackTrace();
+			return new ArrayList<String>();
 		}
 		
 		
@@ -80,10 +98,15 @@ public class Tags {
 		
 		//Parse the comments for separate words
 		String origComm = tag.getComment();
+		System.out.println("BEFORE");
+		System.out.println(origComm);
+		System.out.println("AFTER");
 		Scanner input = new Scanner(origComm);
 		while(input.hasNext())
 		{
-			myTags.add(input.next());
+			String token =input.next();
+			if(token.trim().length()>0)
+				myTags.add(token);
 		}
 		input.close();
 		
@@ -93,9 +116,40 @@ public class Tags {
 		myTags.clear();
 		myTags.addAll(hs);
 		
-		for(String a: myTags)
-			System.out.println(a);
+		hs.addAll(allTags);
+		allTags.clear();
+		allTags.addAll(hs);
 		
-		return defaultTags;
+		currentTags.addAll(myTags);
+		
+		if (myTags.isEmpty())
+			return defaultTags;
+		return myTags;
+	}
+	
+	public String getTitle(String filename)
+	{
+		Mp3File me = null;
+		try {
+			me = new Mp3File(filename);
+		} catch (Exception e) {
+			return "";
+		}
+		
+		
+		//Get the mp3 tag
+		ID3v1 tag;
+		if (me.hasId3v1Tag()) {
+		  tag = me.getId3v1Tag();
+		} else {
+		  // mp3 does not have an ID3v2 tag, let's create one..
+		  tag = new ID3v1Tag();
+		  me.setId3v1Tag(tag);
+		}
+		
+		String title = tag.getTrack();
+		System.out.println(title);
+		
+		return title;
 	}
 }

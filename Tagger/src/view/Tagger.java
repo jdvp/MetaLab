@@ -8,21 +8,19 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 
 import model.TagAdder;
 import model.Tags;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
 
 public class Tagger extends JFrame {
 
@@ -32,9 +30,35 @@ public class Tagger extends JFrame {
 	private static final long serialVersionUID = 2321192101874405576L;
 	
 	private Tags myTags = new Tags();
+	private ArrayList<JCheckBox> checks = new ArrayList<JCheckBox>();
 	private String songAddress = "";
 	private JPanel contentPane;
-
+	private JTextField tagField;
+	private JPanel tagPanel;
+	private JScrollPane scrollPane_1;
+	
+	ItemListener checkBoxListener = new ItemListener(){
+		public void itemStateChanged(ItemEvent arg0)
+		{
+			if(arg0.getStateChange() == ItemEvent.SELECTED)
+			{
+				if(arg0.getItem() instanceof JCheckBox)
+				{
+					JCheckBox a = (JCheckBox) arg0.getItem();
+					addTag(a.getText());
+				}
+			}
+			else 
+			{
+				if(arg0.getItem() instanceof JCheckBox)
+				{
+					JCheckBox a = (JCheckBox) arg0.getItem();
+					removeTag(a.getText());
+				}
+			}
+		}
+	};
+	
 	/**
 	 * Launch the application.
 	 */
@@ -63,32 +87,39 @@ public class Tagger extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
-		ArrayList<String> defaultTags = myTags.getDefaultTags();
-		
 		JPanel panel = new JPanel();
 		contentPane.add(panel, BorderLayout.EAST);
 		
-		ItemListener checkBoxListener = new ItemListener(){
-			public void itemStateChanged(ItemEvent arg0)
-			{
-				if(arg0.getStateChange() == ItemEvent.SELECTED)
-				{
-					if(arg0.getItem() instanceof JCheckBox)
-					{
-						JCheckBox a = (JCheckBox) arg0.getItem();
-						addTag(a.getText());
-					}
-				}
-				else 
-				{
-					if(arg0.getItem() instanceof JCheckBox)
-					{
-						JCheckBox a = (JCheckBox) arg0.getItem();
-						removeTag(a.getText());
-					}
-				}
+
+		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		
+		
+		
+		tagPanel = new JPanel();
+		scrollPane_1.setViewportView(tagPanel);
+		
+		tagPanel.setLayout(new BoxLayout(tagPanel, BoxLayout.Y_AXIS));
+		
+		
+		updateTagPanel();
+
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.add(scrollPane_1);
+		
+		JButton btnNewTag = new JButton("Add new tag");
+		btnNewTag.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				myTags.addTag(tagField.getText());
+				tagField.setText("");
+				updateTagPanel();
 			}
-		};
+		});
+		
+		tagField = new JTextField();
+		tagField.setColumns(10);
+		panel.add(tagField);
+		panel.add(btnNewTag);
 		
 		JButton btnSave = new JButton("      Save      ");
 		btnSave.addActionListener(new ActionListener() {
@@ -97,72 +128,7 @@ public class Tagger extends JFrame {
 				a.commitComment(myTags.outputTag());
 			}
 		});
-		
-		JButton btnNewTag = new JButton("Add new tag");
-		btnNewTag.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				myTags.addTag(tagField.getText());
-				tagField.setText("");
-			}
-		});
-		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		
-		GroupLayout gl_panel = new GroupLayout(panel);
-		gl_panel.setHorizontalGroup(
-			gl_panel.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_panel.createSequentialGroup()
-					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_panel.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(btnNewTag, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-						.addGroup(gl_panel.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(btnSave, GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)))
-					.addContainerGap())
-				.addComponent(scrollPane_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
-		);
-		gl_panel.setVerticalGroup(
-			gl_panel.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_panel.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
-					.addGap(18)
-					.addComponent(btnNewTag)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnSave))
-		);
-		
-		JPanel panel_5 = new JPanel();
-		scrollPane_1.setViewportView(panel_5);
-		
-		JCheckBox tag8 = new JCheckBox(defaultTags.get(7));
-		
-		JCheckBox tag1 = new JCheckBox(defaultTags.get(2));
-		GroupLayout gl_panel_5 = new GroupLayout(panel_5);
-		gl_panel_5.setHorizontalGroup(
-			gl_panel_5.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_5.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_panel_5.createParallelGroup(Alignment.LEADING)
-						.addComponent(tag8)
-						.addComponent(tag1))
-					.addGap(459))
-		);
-		gl_panel_5.setVerticalGroup(
-			gl_panel_5.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_5.createSequentialGroup()
-					.addGap(5)
-					.addComponent(tag8)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(tag1)
-					.addContainerGap(163, Short.MAX_VALUE))
-		);
-		panel_5.setLayout(gl_panel_5);
-		tag1.addItemListener(checkBoxListener);
-		tag8.addItemListener(checkBoxListener);
-		panel.setLayout(gl_panel);
+		panel.add(btnSave);
 		
 		JPanel panel_1 = new JPanel();
 		contentPane.add(panel_1, BorderLayout.NORTH);
@@ -188,22 +154,49 @@ public class Tagger extends JFrame {
 
 				
 				songAddress = txtCusersjdPorterfielddocumentssummerkerr.getText();
-				myTags.checkOriginalTags(songAddress);
 				myTags = new Tags();
-				tag1.setSelected(false);
-				tag2.setSelected(false);
-				tag3.setSelected(false);
-				tag4.setSelected(false);
-				tag5.setSelected(false);
-				tag6.setSelected(false);
-				tag7.setSelected(false);
-				tag8.setSelected(false);
+				myTags.checkOriginalTags(songAddress);
+				myTags.addTag(tagField.getText());
+				tagField.setText("");
+				lblNewLabel.setText(myTags.getTitle(songAddress));
+				
+				updateTagPanel();
 			}
 		});
 		panel_4.add(btnChoose);
 		
 		JPanel panel_3 = new JPanel();
 		panel_2.add(panel_3);
+	}
+	
+	public ArrayList<JCheckBox> getCheckBoxes()
+	{
+		ArrayList<JCheckBox> myTagFields = new ArrayList<JCheckBox>();
+		
+		
+		for(String tag : myTags.getAllTags())
+		{
+			JCheckBox box = new JCheckBox(tag);
+			ArrayList<String> current = myTags.getCurrentTags();
+			if(current.contains(tag))
+				box.setSelected(true);
+			myTagFields.add(box);
+		}
+		
+		return myTagFields;
+	}
+	
+	public void updateTagPanel()
+	{
+		tagPanel.removeAll();
+		scrollPane_1.setViewportView(tagPanel);
+		tagPanel.setLayout(new BoxLayout(tagPanel, BoxLayout.Y_AXIS));
+		
+		for(JCheckBox box: getCheckBoxes())
+		{
+			box.addItemListener(checkBoxListener);
+			tagPanel.add(box);
+		}
 	}
 	
 	public void addTag(String tag)
