@@ -3,6 +3,7 @@ package model;
 import java.io.RandomAccessFile;
 
 import org.farng.mp3.MP3File;
+import org.farng.mp3.id3.AbstractID3v2;
 import org.farng.mp3.id3.ID3v1;
 import org.farng.mp3.id3.ID3v2_3;
 
@@ -28,8 +29,18 @@ public class TagAdder {
 		try 
 		{
 			RandomAccessFile me = new RandomAccessFile(song, "rw");
+			MP3File myFile = new MP3File(song);
+			
+			AbstractID3v2 myID = myFile.getID3v2Tag();
+			myTag.append(myID);
 			myTag.write(me);
+			
+			ID3v1 my1 = myFile.getID3v1Tag();
+			myV1Tag.append(my1);
 			myV1Tag.write(me);
+			
+			//myTag.write(me);
+			//myV1Tag.write(me);
 			me.close();
 		} 
 		catch (Exception e) 

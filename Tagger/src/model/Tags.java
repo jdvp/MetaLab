@@ -151,7 +151,7 @@ public class Tags {
 		  me.setId3v1Tag(tag);
 		}
 		
-		String title = tag.getTrack();
+		String title = tag.getTitle();
 		if(title == "" || title == null)
 		{
 			title = filename;
